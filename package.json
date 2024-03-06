@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@org/root",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Jakub Kazimierczak",
+  "private": true,
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=8.14.0"
+  },
+  "packageManager": "pnpm@8.14.0",
+  "scripts": {
+    "clean": "pnpm run --recursive clean",
+    "lint": "npx nx run-many --target=lint",
+    "lint:fix": "npx nx run-many --target=lint:fix",
+    "lint:ws": "pnpm dlx sherif@latest",
+    "test": "npx nx run-many --target=test",
+    "format": "npx nx run-many --target=format",
+    "format:write": "npx nx run-many --target=format:write",
+    "typecheck": "npx nx run-many --target=typecheck",
+    "check:all": "npx nx run-many --target lint format typecheck test",
+    "build": "npx nx run-many --target=build",
+    "build:lib": "pnpm nx build --project=@org/contracts",
+    "build:lib:watch": "pnpm build:lib && pnpm nx watch --projects=@org/contracts -- pnpm nx run  %NX_PROJECT_NAME%:build",
+    "postinstall": "pnpm lint:ws"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.0.3",
+    "@commitlint/config-conventional": "^19.0.3",
+    "@org/prettier-config": "workspace:^",
+    "lint-staged": "^15.2.2",
+    "nx": "^18.0.7",
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  },
+  "prettier": "@org/prettier-config",
+  "pnpm": {
+    "overrides": {
+      "zod": "^3.22.4"
+    }
+  }
+}

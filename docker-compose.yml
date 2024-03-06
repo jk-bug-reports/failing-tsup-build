@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  orgPostgres:
+    image: postgres:alpine
+    container_name: org_postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - org_postgres_data:/var/lib/postgresql/data
+      - ./apps/backend/database/init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -d ${DOCKER_DATABASE_URL}'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  orgRedis:
+    image: redis:alpine
+    container_name: org_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - org_redis_data:/data
+
+  # https://github.com/supertokens/supertokens-docker-postgresql/blob/master/README.md
+  supertokens:
+    image: registry.supertokens.io/supertokens/supertokens-postgresql:8.0
+    restart: unless-stopped
+    depends_on:
+      orgPostgres:
+        condition: service_healthy
+    ports:
+      - 3567:3567
+    env_file:
+      - .env
+    environment:
+      - API_KEYS=${SUPERTOKENS_API_KEY}
+      - POSTGRESQL_CONNECTION_URI="${DOCKER_DATABASE_URL}"
+      - POSTGRESQL_TABLE_SCHEMA=super_tokens
+    healthcheck:
+      test: >
+        bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  default:
+    name: org_net
+
+volumes:
+  org_postgres_data:
+  org_redis_data:

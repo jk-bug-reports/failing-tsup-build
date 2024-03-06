@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@org/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./src/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "clean": "rimraf node_modules dist",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "format:write": "prettier --write . --ignore-path ../../.gitignore",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@org/eslint-config": "workspace:^",
+    "@org/prettier-config": "workspace:^",
+    "@org/tsconfig": "workspace:^",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@org/eslint-config/base"
+    ]
+  },
+  "prettier": "@org/prettier-config",
+  "dependencies": {
+    "@anatine/zod-openapi": "^2.2.3",
+    "@ts-rest/core": "^3.33.0",
+    "zod": "^3.22.4"
+  }
+}
