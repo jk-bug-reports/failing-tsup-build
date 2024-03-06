@@ -23,6 +23,7 @@
     "@nestjs/common": "^10.3.3",
     "@nestjs/core": "^10.3.3",
     "@nestjs/platform-express": "^10.3.3",
+    "@org/contracts": "workspace:^",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1"
   },
